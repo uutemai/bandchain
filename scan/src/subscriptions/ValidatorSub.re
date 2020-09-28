@@ -199,10 +199,10 @@ module ValidatorCountByJailedConfig = [%graphql
   |}
 ];
 
-module SingleLast250VotedConfig = [%graphql
+module SingleLast100VotedConfig = [%graphql
   {|
   subscription ValidatorLast25Voted($consensusAddress: String!) {
-    validator_last_250_votes(where: {consensus_address: {_eq: $consensusAddress}}) {
+    validator_last_100_votes(where: {consensus_address: {_eq: $consensusAddress}}) {
       count
       voted
     }
@@ -210,10 +210,10 @@ module SingleLast250VotedConfig = [%graphql
 |}
 ];
 
-module MultiLast250VotedConfig = [%graphql
+module MultiLast100VotedConfig = [%graphql
   {|
   subscription ValidatorsLast25Voted {
-    validator_last_250_votes {
+    validator_last_100_votes {
       consensus_address
       count
       voted
@@ -222,7 +222,7 @@ module MultiLast250VotedConfig = [%graphql
 |}
 ];
 
-module SingleLast100VotedConfig = [%graphql
+module SingleLast100ListConfig = [%graphql
   {|
   subscription SingleLast100Voted($consensusAddress: String!) {
     validator_votes(limit: 100, where: {validator: {consensus_address: {_eq: $consensusAddress}}}, order_by: {block_height: desc}) {
@@ -305,15 +305,15 @@ let getTotalBondedAmount = () => {
 let getUptime = consensusAddress => {
   let (result, _) =
     ApolloHooks.useSubscription(
-      SingleLast250VotedConfig.definition,
+      SingleLast100VotedConfig.definition,
       ~variables=
-        SingleLast250VotedConfig.makeVariables(
+        SingleLast100VotedConfig.makeVariables(
           ~consensusAddress=consensusAddress |> Address.toHex,
           (),
         ),
     );
   let%Sub x = result;
-  let validatorVotes = x##validator_last_250_votes;
+  let validatorVotes = x##validator_last_100_votes;
   let signedBlock =
     validatorVotes
     ->Belt.Array.keep(each => each##voted == Some(true))
@@ -338,10 +338,10 @@ let getUptime = consensusAddress => {
 
 // For computing uptime on Validator home page
 let getListVotesBlock = () => {
-  let (result, _) = ApolloHooks.useSubscription(MultiLast250VotedConfig.definition);
+  let (result, _) = ApolloHooks.useSubscription(MultiLast100VotedConfig.definition);
   let%Sub x = result;
   let validatorVotes =
-    x##validator_last_250_votes
+    x##validator_last_100_votes
     ->Belt.Array.map(each =>
         {
           consensusAddress: each##consensus_address->Belt.Option.getExn->Address.fromHex,
@@ -355,9 +355,9 @@ let getListVotesBlock = () => {
 let getBlockUptimeByValidator = consensusAddress => {
   let (result, _) =
     ApolloHooks.useSubscription(
-      SingleLast100VotedConfig.definition,
+      SingleLast100ListConfig.definition,
       ~variables=
-        SingleLast100VotedConfig.makeVariables(
+        SingleLast100ListConfig.makeVariables(
           ~consensusAddress=consensusAddress |> Address.toHex,
           (),
         ),
