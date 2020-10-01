@@ -2,7 +2,11 @@ module Styles = {
   open Css;
 
   let container =
-    style([width(`percent(100.)), height(`percent(100.)), position(`relative)]);
+    style([
+      width(`percent(100.)),
+      height(`percent(100.)),
+      position(`relative),
+    ]);
 
   let innerContainer =
     style([
@@ -27,14 +31,21 @@ let make = () => {
   | "WENCHANG"
   | "GUANYU38"
   | "GUANYU" => ()
-  | _ => raise(WrongNetwork("Incorrect or unspecified NETWORK environment variable"))
+  | _ =>
+    raise(
+      WrongNetwork("Incorrect or unspecified NETWORK environment variable"),
+    )
   };
   let currentRoute = ReasonReactRouter.useUrl() |> Route.fromUrl;
+  Js.Console.log("Test");
 
   <div className=Styles.container>
     <Header />
     {Media.isMobile()
-       ? <Section pt=16 pb=16 bg={currentRoute == HomePage ? Colors.highlightBg : Colors.bg}>
+       ? <Section
+           pt=16
+           pb=16
+           bg={currentRoute == HomePage ? Colors.highlightBg : Colors.bg}>
            <div className=CssHelper.container> <SearchBar /> </div>
          </Section>
        : React.null}
@@ -43,19 +54,29 @@ let make = () => {
        | HomePage => <HomePage />
        | DataSourceHomePage => <DataSourceHomePage />
        | DataSourceIndexPage(dataSourceID, hashtag) =>
-         <DataSourceIndexPage dataSourceID={ID.DataSource.ID(dataSourceID)} hashtag />
+         <DataSourceIndexPage
+           dataSourceID={ID.DataSource.ID(dataSourceID)}
+           hashtag
+         />
        | OracleScriptHomePage => <OracleScriptHomePage />
        | OracleScriptIndexPage(oracleScriptID, hashtag) =>
-         <OracleScriptIndexPage oracleScriptID={ID.OracleScript.ID(oracleScriptID)} hashtag />
+         <OracleScriptIndexPage
+           oracleScriptID={ID.OracleScript.ID(oracleScriptID)}
+           hashtag
+         />
        | TxHomePage => <TxHomePage />
        | TxIndexPage(txHash) => <TxIndexPage txHash />
        | BlockHomePage => <BlockHomePage />
-       | BlockIndexPage(height) => <BlockIndexPage height={ID.Block.ID(height)} />
+       | BlockIndexPage(height) =>
+         <BlockIndexPage height={ID.Block.ID(height)} />
        | ValidatorHomePage => <ValidatorHomePage />
-       | ValidatorIndexPage(address, hashtag) => <ValidatorIndexPage address hashtag />
+       | ValidatorIndexPage(address, hashtag) =>
+         <ValidatorIndexPage address hashtag />
        | RequestHomePage => <RequestHomePage />
-       | RequestIndexPage(reqID) => <RequestIndexPage reqID={ID.Request.ID(reqID)} />
-       | AccountIndexPage(address, hashtag) => <AccountIndexPage address hashtag />
+       | RequestIndexPage(reqID) =>
+         <RequestIndexPage reqID={ID.Request.ID(reqID)} />
+       | AccountIndexPage(address, hashtag) =>
+         <AccountIndexPage address hashtag />
        | ProposalHomePage => <ProposalHomePage />
        | ProposalIndexPage(proposalID) =>
          <ProposalIndexPage proposalID={ID.Proposal.ID(proposalID)} />
