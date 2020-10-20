@@ -85,7 +85,7 @@ let make = (~msg: TxSub.Msg.t, ~width: int) => {
      | RequestMsgSuccess({id, oracleScriptID, oracleScriptName}) =>
        <DataMsg.RequestMsg id oracleScriptID oracleScriptName />
      | ReportMsgSuccess({requestID}) => <DataMsg.ReportMsg requestID />
-     | AddReporterMsgSuccess({validator, reporter}) => <ValidatorMsg.AddReporter reporter />
+     | AddReporterMsgSuccess({reporter}) => <ValidatorMsg.AddReporter reporter />
      | RemoveReporterMsgSuccess({reporter}) => <ValidatorMsg.RemoveReporter reporter />
      | CreateValidatorMsgSuccess({moniker}) => <ValidatorMsg.CreateValidator moniker />
      | EditValidatorMsgSuccess({moniker}) => <ValidatorMsg.EditValidator moniker />
